@@ -234,7 +234,6 @@ DebriefingState::~DebriefingState()
  */
 void DebriefingState::btnOkClick(Action *)
 {
-	_game->getSavedGame()->setBattleGame(0);
 	_game->popState();
 	if (_game->getSavedGame()->getMonthsPassed() == -1)
 	{
@@ -559,7 +558,7 @@ void DebriefingState::prepareDebriefing()
 			else if (oldFaction == FACTION_NEUTRAL)
 			{
 				if ((*j)->killedBy() == FACTION_PLAYER)
-					addStat("STR_CIVILIANS_KILLED_BY_XCOM_OPERATIVES", 1, -(*j)->getValue() + (2 * ((*j)->getValue() / 3)));
+					addStat("STR_CIVILIANS_KILLED_BY_XCOM_OPERATIVES", 1, -(*j)->getValue() - (2 * ((*j)->getValue() / 3)));
 				else // if civilians happen to kill themselves XCOM shouldn't get penalty for it
 					addStat("STR_CIVILIANS_KILLED_BY_ALIENS", 1, -(*j)->getValue());
 			}
@@ -874,6 +873,8 @@ void DebriefingState::prepareDebriefing()
 			}
 		}
 	}
+	// Now ending the battle.
+	save->setBattleGame(0);
 }
 
 void DebriefingState::reequipCraft(Base *base, Craft *craft, bool vehicleItemsCanBeDestroyed)
